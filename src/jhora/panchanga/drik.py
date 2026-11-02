@@ -108,6 +108,16 @@ class Place:
         yield self.longitude
         yield self.timezone
 
+    def __eq__(self, other):
+        if isinstance(other, Place):
+            return self._base == other._base and self._elevation == other._elevation
+        if isinstance(other, tuple):
+            return tuple(self._base) == other[:4]
+        return False
+
+    def __hash__(self):
+        return hash((self._base, self._elevation))
+
     def __repr__(self):
         return (
             f"Place(Place={self.name!r}, latitude={self.latitude}, "
@@ -4589,6 +4599,7 @@ def true_tropical_year(jd_start, place,round_to_digits=6):
     true_tropical_year_duration = jd_next_return - jd_utc
     
     return true_tropical_year_duration
+@lru_cache(maxsize=512)
 def true_sidereal_year(jd,place,round_to_digits=6):
     """
         Sidereal Year = Duration earth takes to complete one revoultion around the sun relative fixed stars (Ayanamsa applied)
@@ -4914,6 +4925,7 @@ def solar_month_date(jd, place, sankranti_rule=None, ghatikas=None):
     day_number = int(round(current_sunrise_jd)) - int(round(final_start_jd)) + 1
 
     return final_month_idx, day_number
+@lru_cache(maxsize=512)
 def dhasa_year_duration(dhasa_duration_type=None,jd=None,place=None,round_to_digits=6,
                         savana_year_method=None,true_lunar_year_method=None): #V4.8.5
     jd_place_not_none = (jd is not None and place is not None)

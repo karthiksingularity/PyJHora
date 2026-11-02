@@ -387,6 +387,7 @@ def get_dhasa_bhukthi(
         star_position_from_moon=star_position_from_moon,
         dhasa_starting_planet=dhasa_starting_planet,
     )
+    # Avoid redundant dhasa_year_duration recomputation in kalachakra_dhasa since year_duration is already set above
     return kalachakra_dhasa(
         planet_longitude=planet_long,
         jd=jd,
@@ -395,7 +396,7 @@ def get_dhasa_bhukthi(
         dhasa_method=dhasa_method,
         dhasa_duration_type=dhasa_duration_type,
         savana_year_method=savana_year_method,
-        place=place,
+        place=None,
         **kwargs,
     )
 
